@@ -16,5 +16,5 @@ Java 8
 * ./mvnw.cmd clean install
 * ./mvnw spring-boot:run
 
-And then go to:  http://localhost:8080/api/employees
+And then go to:  http://localhost:8080/api
 
