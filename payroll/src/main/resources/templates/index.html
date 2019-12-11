@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<!-- Bootstrap core CSS -->
+<link href="../static/css/bootstrap.css" rel="stylesheet"
+	th:href="@{/css/bootstrap.css}" />
+<script src="js/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+	<p>
+		Employee Id: <input id="employee-id" type="text" />
+	</p>
+	<h4 class="card-title">
+		<button id="get-employees" class="btn btn-primary" type="button">Get employees</button>
+	</h4>
+	<table id="employeesData" class="table table-striped">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Contract type</th>
+				<th>Role</th>
+				<th>Annual salary</th>
+			</tr>
+		</thead>
+	</table>
+	<script>
+		function callApi(param) {
+			var endpoint = 'http://localhost:8080/api/';
+			var context = "";
+			if (param) {
+				context = "employees/" + param;
+			} else {
+				context = "employees";
+			}
+			$.ajax({
+				type : "GET",
+				url : endpoint + context,
+				contentType : "application/json; charset=utf-8",
+				dataType : "json",
+				success : function(data) {
+					var result;
+					    if ($.type(data) !== 'array') {
+					        var result = [];
+					        result.push(data);
+					    } else {
+					    	result = data; 
+					    }
+					var render = '';
+					$.each(result, function(i, item) {
+						render += '<tr><td>' + item.name + '</td><td>'
+								+ item.contractTypeName + '</td><td>'
+								+ item.roleName + '</td><td>'
+								+ item.calculatedAnnualSalary + '</td></tr>';
+					});
+					$('#employeesData tbody').empty();
+					$('#employeesData').append(render);
+					
+				}
+			});
+		}
+
+		$(document).ready(function() {
+			callApi("");
+		});
+
+		$("#get-employees").click(function() {
+			var idValue = $("#employee-id").val();
+			if (idValue) {
+				callApi(idValue);
+			} else {
+				callApi("");
+			}
+		});
+	</script>
+
+	<!-- Bootstrap core JavaScript================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<!--  <script src="../static/js/bootstrap.js"></script>-->
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"
+		integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm"
+		crossorigin="anonymous"></script>
+</body>
+</html>
